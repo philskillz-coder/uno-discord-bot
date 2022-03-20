@@ -1,6 +1,14 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-.idea/
+# log files
+*.log
+
+# python cache
+**/__pycache__
+
+# vsc cache
+**/.vscode
+
+# pc cache
+**/.idea
+
+# bot config file
 imp/data/config.py
