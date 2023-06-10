@@ -17,7 +17,7 @@ class StartGame(BetterButton):
         self.host = host
 
     async def check(self, interaction: BetterInteraction) -> CheckValue:
-        return self.cv(failed=not (interaction.user == self.host))
+        return self.cv(failed=interaction.user != self.host)
 
     async def on_fail(self, interaction: BetterInteraction, check_value: CheckValue):
         await interaction.response.send_message(
@@ -45,7 +45,7 @@ class StopGame(BetterButton):
         self.host = host
 
     async def check(self, interaction: BetterInteraction) -> CheckValue:
-        return self.cv(failed=not (interaction.user == self.host))
+        return self.cv(failed=interaction.user != self.host)
 
     async def on_fail(self, interaction: BetterInteraction, check_value: CheckValue):
         await interaction.response.send_message(
@@ -205,10 +205,7 @@ class SkipMe(BetterButton):
 
         await self.client.game_manager.skip_participant(game)
 
-        await interaction.response.send_message(
-            content=f"You skipped.",
-            ephemeral=True
-        )
+        await interaction.response.send_message(content="You skipped.", ephemeral=True)
 
 
 class GameInitView(BetterView):
