@@ -288,7 +288,7 @@ class CardStack:
 
     @strict_types
     def gen_cards(self, amount: int = 1) -> List[Card]:
-        return [self.random_card() for x in range(amount)]
+        return [self.random_card() for _ in range(amount)]
 
     def random_card(self) -> Card:
         if len(self.unused) == 0:
@@ -365,7 +365,7 @@ class UNOGame:
 
     @strict_types
     def give_cards(self, card_count: int = 7):
-        for x in range(card_count):
+        for _ in range(card_count):
             for participant in self.participants.values():
                 participant.give_card(self.stack.random_card())
 
@@ -436,11 +436,10 @@ class UNOGame:
 
     @strict_types
     def get_participant(self, player: Member) -> Participant:
-        participant = self.participants.get(player)
-        if not participant:
+        if participant := self.participants.get(player):
+            return participant
+        else:
             raise ValueError("User is not participating.")
-
-        return participant
 
     @strict_types
     def set_participant(self, participant: Participant):
@@ -638,11 +637,7 @@ class GameManager:
         self,
         player: Member
     ) -> bool:
-        for game in self.games.values():
-            if game.has_participant(player):
-                return True
-
-        return False
+        return any(game.has_participant(player) for game in self.games.values())
 
     @strict_types
     def get_game(
@@ -715,9 +710,7 @@ class GameManager:
     async def report_card(self, participant: Participant) -> StackedCard:
         # TODO: report logic
         game = self.get_player_game(participant.user)
-        rc = game.stack.cards[-1]
-
-        return rc
+        return game.stack.cards[-1]
 
     @strict_types
     async def place_card(self, game: UNOGame, participant: Participant, card: Card):
